@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler
 from config.auth import token
 import json
 import requests
-
+import subprocess
 import logging
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -32,6 +32,9 @@ def status(bot, update):
 
 def up(bot, update):
     logger.info('He recibido un comando UP')
+    p = subprocess.Popen("sudo service ngrok start", stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    logger.info("Command output : ", output)
     bot.send_message(
         chat_id=update.message.chat_id,
         text="Encendiedo servicio de VPN y forwardeo de puerto "
@@ -39,6 +42,9 @@ def up(bot, update):
 
 def down(bot, update):
     logger.info('He recibido un comando DOWN')
+    p = subprocess.Popen("sudo service ngrok stop", stdout=subprocess.PIPE, shell=True)
+    (output, err) = p.communicate()
+    logger.info("Command output : ", output)
     bot.send_message(
         chat_id=update.message.chat_id,
         text="Apagando servicio de VPN y forwarding"
